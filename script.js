@@ -14,6 +14,12 @@ let snakebody=[];
 let setIntervalId;
 let score=0;
 let highscore=localStorage.getItem("high-score")||0;
+const audio3=new Audio("gameendedeffect.mp3");
+const audio4=new Audio("touchaudio.mpeg");
+
+function play()
+{
+    audio4.play();
 
 
 const changeFoodPosition = () =>
@@ -25,9 +31,12 @@ const changeFoodPosition = () =>
 
 const handleGameOver =()=>
 {
+    audio3.play();
     clearInterval(setIntervalId);
-    alert("Game Over Press Ok to replay....");
     location.reload();
+    alert("Game Ended Press Ok to replay....");
+    
+    
 }
 
 const changeDirection =(e) =>
@@ -66,14 +75,16 @@ const initGame=()=>
     if(snakeX === foodX &&snakeY==foodY)
     {
         changeFoodPosition();
+        var audio=new Audio("audiosound.mp3");
+        audio.play();
         snakebody.push([foodX,foodY]);
         score++;
 
-        highscore=score>=highscore?score:highscore;
+        highscore=score>highscore?score:highscore;
         localStorage.setItem("high-score",highscore);
 
         scoreElement.innerText=`Score: ${score}`;
-        highscoreElement.innerText=`Score: ${score}`;
+        highscoreElement.innerText=`High-Score: ${highscore}`;
     }
 
 
@@ -88,14 +99,18 @@ const initGame=()=>
 
     if(snakeX<=0||snakeX>30 ||snakeY<=0 ||snakeY>30)
     {
+        audio3.play();
         gameover=true;
+       
     }
 
     for (let i = 0; i < snakebody.length; i++) {
         htmlMarkup+=`<div class="head" style="grid-area: ${snakebody[i][1]} / ${snakebody[i][0]} "></div>`;
-        if(i !== 0 &&snakebody[0][1] === snakebody[i][1] || snakebody[0][0] === snakebody[i][0])
+        if(i !== 0 &&snakebody[0][1] === snakebody[i][1] && snakebody[0][0] === snakebody[i][0])
         {
             gameover=true;
+            
+
         }
         
     }
@@ -110,3 +125,5 @@ const initGame=()=>
 setIntervalId=setInterval(initGame(),130);
 
 document.addEventListener("keydown",changeDirection);
+
+}
